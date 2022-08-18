@@ -9,7 +9,7 @@ class Cards extends StatelessWidget {
   }) : super(key: key);
 
   final String coin;
-  final String coinRate;
+  final String? coinRate;
   final String? fiat;
 
   @override

@@ -1,4 +1,4 @@
-#Thu Aug 18 13:26:44 SAMT 2022
+#Thu Aug 18 17:56:50 SAMT 2022
 base.0=/home/vukolro/AndroidStudioProjects/cripto_ticker_flutter/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
 renamed.0=classes.dex
 path.0=classes.dex

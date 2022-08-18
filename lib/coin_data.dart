@@ -32,25 +32,26 @@ const List<String> cryptoList = [
   'BTC',
   'ETH',
   'LTC',
+  'BNB',
 ];
 
 class CoinData {
-  CoinData(this.coin1, this.coin2);
-  String coin1;
-  String? coin2;
-
-  Future getCoinData() async {
-    String urlUnencodedPath = 'v1/exchangerate/$coin1/$coin2';
-    final url = Uri.https(urlAuthority, urlUnencodedPath, {
-      'apikey': kApiKey,
-    });
-    http.Response response = await http.get(url);
-    if (response.statusCode == 200) {
-      String data = response.body;
-      var lastPrice = jsonDecode(data)['rate'];
-      return lastPrice;
-    } else {
-      print('error ${response.statusCode}');
+  Future getCoinData(String? fiat) async {
+    Map<String, String> cryptoPrices = {};
+    for (String coin in cryptoList) {
+      String urlUnencodedPath = 'v1/exchangerate/$coin/$fiat';
+      final url = Uri.https(urlAuthority, urlUnencodedPath, {
+        'apikey': kApiKey,
+      });
+      http.Response response = await http.get(url);
+      if (response.statusCode == 200) {
+        String data = response.body;
+        double lastPrice = jsonDecode(data)['rate'];
+        cryptoPrices[coin] = lastPrice.toStringAsFixed(2);
+      } else {
+        print('error ${response.statusCode}');
+      }
     }
+    return cryptoPrices;
   }
 }

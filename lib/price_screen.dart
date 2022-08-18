@@ -16,20 +16,36 @@ class _PriceScreenState extends State<PriceScreen> {
   String eth = 'ETH';
   String doge = 'DOGE';
   List<String> coinDataList = currenciesList;
+  bool isWaiting = true;
+  Map<String, String> coinValue = {};
 
   void updateRate() async {
+    isWaiting = true;
     try {
-      var lastPriceBtc = await CoinData(btc, fiat).getCoinData();
-      // var lastPriceEth = await CoinData(eth, fiat).getCoinData();
-      // var lastPriceDoge = await CoinData(doge, fiat).getCoinData();
+      var data = await CoinData().getCoinData(fiat);
+      isWaiting = false;
       setState(() {
-        rateBtc = lastPriceBtc.toStringAsFixed(2);
-        // rateEth = lastPriceEth.toStringAsFixed(2);
-        // rateDoge = lastPriceDoge.toStringAsFixed(2);
+        coinValue = data;
       });
     } catch (e) {
       print(e);
     }
+  }
+
+  Column makeCards() {
+    List<Cards> criptoCards = [];
+    for (String coin in cryptoList) {
+      criptoCards.add(
+        Cards(
+            coin: coin,
+            coinRate: isWaiting ? '?' : coinValue[coin],
+            fiat: fiat),
+      );
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: criptoCards,
+    );
   }
 
   @override
@@ -48,9 +64,7 @@ class _PriceScreenState extends State<PriceScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Cards(coin: btc, coinRate: rateBtc, fiat: fiat),
-          Cards(coin: eth, coinRate: rateEth, fiat: fiat),
-          Cards(coin: doge, coinRate: rateDoge, fiat: fiat),
+          makeCards(),
           Expanded(child: Container()),
           Container(
             height: 150.0,
